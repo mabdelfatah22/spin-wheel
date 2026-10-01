@@ -196,13 +196,13 @@ body{
 .mcard{
   background:var(--surf);border:1.5px solid var(--acc);
   border-radius:18px;padding:36px 48px;text-align:center;
-  max-width:86vw;box-shadow:0 0 40px rgba(0,0,0,.3);
+  max-width:92vw;max-height:90vh;overflow:auto;box-shadow:0 0 40px rgba(0,0,0,.3);
   animation:pop .28s cubic-bezier(.34,1.56,.64,1);
   transition:background .25s;
 }
 @keyframes pop{from{opacity:0;transform:scale(.72)}to{opacity:1;transform:scale(1)}}
 .mey{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--acc);margin-bottom:10px}
-.mwin{font-size:22px;font-weight:700;line-height:1.4;margin-bottom:22px;max-width:400px;color:var(--txt)}
+.mwin{font-size:clamp(28px,5vw,64px);font-weight:700;line-height:1.25;margin-bottom:28px;max-width:1000px;color:var(--txt);overflow-wrap:anywhere;white-space:pre-wrap}
 .macts{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
 .mb{padding:10px 22px;border-radius:50px;font:700 13px/1 inherit;cursor:pointer;border:none;transition:transform .1s,box-shadow .1s}
 .mb-p{background:var(--acc);color:#0B0B18;box-shadow:0 4px 12px rgba(255,184,0,.25)}
@@ -217,9 +217,29 @@ body.kiosk .pside{display:none}
 body.kiosk .clabel{display:none}
 body.kiosk .main{height:100vh}
 body.kiosk .wside{flex:1;justify-content:center;border-bottom:none}
+/* Touch controls and import preview */
+button,select{min-height:44px;touch-action:manipulation}
+button:disabled{opacity:.4;cursor:not-allowed}
+.pbar{flex-wrap:wrap}
+.pselect{flex-basis:180px}
+.display-exit{display:none;position:fixed;top:12px;right:12px;z-index:1000;
+  padding:10px 18px;border:1px solid var(--bdr);border-radius:12px;
+  background:var(--surf);color:var(--txt);font:600 14px system-ui;cursor:pointer}
+body.kiosk .display-exit{display:block}
+body.kiosk .wside{padding-top:64px}
+body.kiosk .spin-btn{font-size:clamp(22px,3vw,36px);padding:18px 70px}
+.import-card{width:600px;text-align:left;padding:28px}
+.import-card h2{margin-bottom:12px;font-size:24px}
+.import-card p{margin-bottom:14px;line-height:1.6}
+.import-preview{max-height:35vh;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;
+  background:var(--surf2);padding:14px;border-radius:8px;margin-bottom:18px}
+.import-status{padding:0 14px;color:var(--txt);line-height:1.5}
+.import-status:empty{display:none}
+@media(max-width:480px){.mcard{padding:24px 18px}.pbar{gap:6px}}
 </style>
 </head>
 <body>
+<button class="display-exit" id="displayExit">← Setup</button>
 
 <!-- HEADER -->
 <div class="hdr">
@@ -227,7 +247,7 @@ body.kiosk .wside{flex:1;justify-content:center;border-bottom:none}
   <h1>Spin the Wheel</h1>
   <div class="hdr-r">
     <div class="badge" id="badge">0 items</div>
-    <button class="theme-btn" id="kioskBtn" title="Kiosk mode — wheel &amp; spin only (Esc to exit)">⛶</button>
+    <button class="theme-btn" id="kioskBtn" title="Enter display mode" aria-label="Enter display mode">⛶</button>
     <button class="theme-btn" id="themeBtn" title="Toggle theme">☀️</button>
   </div>
 </div>
@@ -237,7 +257,7 @@ body.kiosk .wside{flex:1;justify-content:center;border-bottom:none}
 
   <!-- WHEEL -->
   <div class="wside">
-    <canvas id="wc"></canvas>
+    <canvas id="wc" role="img" aria-label="Wheel of phrases"></canvas>
     <button class="spin-btn" id="spinBtn">SPIN</button>
     <div class="clabel" id="clabel">Add items below to begin</div>
   </div>
@@ -252,8 +272,9 @@ body.kiosk .wside{flex:1;justify-content:center;border-bottom:none}
       <button class="theme-btn" id="presetExportBtn" title="Export all presets to a file">⬇</button>
       <button class="theme-btn" id="presetImportBtn" title="Import presets from a file">⬆</button>
       <button class="dngr" id="presetDelBtn" title="Delete selected preset">🗑</button>
-      <input type="file" id="presetFile" accept="application/json" style="display:none">
+      <input type="file" id="presetFile" accept=".json,application/json" style="display:none">
     </div>
+    <p class="import-status" id="importStatus" role="status" aria-live="polite"></p>
     <div class="tabs">
       <button class="tab on" id="tA">Add One</button>
       <button class="tab" id="tB">Bulk Add</button>
@@ -283,7 +304,7 @@ body.kiosk .wside{flex:1;justify-content:center;border-bottom:none}
 </div>
 
 <!-- WINNER MODAL -->
-<div class="ov" id="ov">
+<div class="ov" id="ov" role="dialog" aria-modal="true" aria-labelledby="mwin">
   <div class="mcard">
     <div class="mey">✨ The Wheel Has Spoken</div>
     <div class="mwin" id="mwin"></div>
@@ -294,6 +315,19 @@ body.kiosk .wside{flex:1;justify-content:center;border-bottom:none}
   </div>
 </div>
 
+<div class="ov" id="importOv" role="dialog" aria-modal="true" aria-labelledby="importTitle">
+  <div class="mcard import-card">
+    <h2 id="importTitle">Import phrases</h2>
+    <p id="importSummary"></p>
+    <div class="import-preview" id="importPreview"></div>
+    <p id="importNote"></p>
+    <div class="macts">
+      <button class="mb mb-s" id="importCancel">Cancel</button>
+      <button class="mb mb-s" id="importAppend">Add to wheel</button>
+      <button class="mb mb-p" id="importApply">Replace wheel</button>
+    </div>
+  </div>
+</div>
 <script>
 'use strict';
 
@@ -313,7 +347,8 @@ function saveJSON(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); 
 /* ── STATE ───────────────────────────────────────── */
 let items = loadJSON('stw-items', []), angle = Math.random() * Math.PI * 2;
 let spinning = false, lastWin = -1, aCtx = null;
-let presets = loadJSON('stw-presets', {}), currentPreset = loadJSON('stw-current-preset', '');
+let presets = Object.assign(Object.create(null), loadJSON('stw-presets', {})), currentPreset = loadJSON('stw-current-preset', '');
+let pendingImport = null;
 
 /* ── CANVAS ──────────────────────────────────────── */
 const cvs = document.getElementById('wc');
@@ -330,7 +365,7 @@ function resizeCvs() {
   const availW = wside.clientWidth - 24;
   /* Kiosk: grow to fill the screen (street display). Normal: shrink to fit only. */
   const scale = kiosk
-    ? Math.min(availW / 480, (window.innerHeight - 140) / 460, 3)
+    ? Math.min(availW / 480, Math.max(1, window.innerHeight - 200) / 460, 3)
     : Math.min(availW / 480, 1);
 
   cvs.style.width  = Math.round(480 * scale) + 'px';
@@ -502,8 +537,9 @@ function winIdx() {
 
 /* ── SPIN ────────────────────────────────────────── */
 function doSpin() {
-  if (spinning || items.length < 2) return;
+  if (spinning || pendingImport || items.length < 2) return;
   ensAudio(); spinning = true;
+  updateControls();
   document.getElementById('spinBtn').disabled = true;
   let vel = .18 + Math.random() * .13, lastSeg = -1;
   (function loop() {
@@ -517,10 +553,8 @@ function doSpin() {
     draw();
     if (vel > .0028) { requestAnimationFrame(loop); }
     else {
-      spinning = false;
-      document.getElementById('spinBtn').disabled = false;
       lastWin = winIdx();
-      setTimeout(showWin, 260);
+      setTimeout(() => { showWin(); spinning = false; updateControls(); }, 260);
     }
   })();
 }
@@ -529,27 +563,31 @@ function doSpin() {
 function showWin() {
   document.getElementById('mwin').textContent = items[lastWin];
   document.getElementById('ov').classList.add('on');
+  document.getElementById('contBtn').focus();
 }
 function closeOv() { document.getElementById('ov').classList.remove('on'); }
 function spinAgain() {
   closeOv();
-  if (items.length >= 2) setTimeout(doSpin, 320);
+  if (items.length >= 2) doSpin();
 }
 
 /* ── ITEM MANAGEMENT ─────────────────────────────── */
 function addOne() {
+  if (spinning) return;
   const el = document.getElementById('sin');
   const v = el.value.trim(); if (!v) return;
   items.push(v); el.value = ''; el.focus(); render(); draw();
 }
 function addBulk() {
+  if (spinning) return;
   const el = document.getElementById('bin');
   const ls = el.value.split('\n').map(l => l.trim()).filter(Boolean);
   if (!ls.length) return;
   items.push(...ls); el.value = ''; render(); draw();
 }
-function del(i) { items.splice(i, 1); render(); draw(); }
+function del(i) { if (spinning) return; items.splice(i, 1); render(); draw(); }
 function clearAll() {
+  if (spinning) return;
   if (!items.length) return;
   if (confirm(`Remove all ${items.length} item${items.length !== 1 ? 's' : ''}?`)) {
     items = []; render(); draw();
@@ -564,6 +602,7 @@ function refreshPresetSel() {
     names.map(n => `<option value="${esc(n)}"${n === currentPreset ? ' selected' : ''}>${esc(n)}</option>`).join('');
 }
 function loadPreset(name) {
+  if (spinning) return;
   if (!presets[name]) return;
   items = presets[name].slice();
   currentPreset = name;
@@ -571,6 +610,7 @@ function loadPreset(name) {
   render(); draw();
 }
 function saveAsPreset() {
+  if (spinning) return;
   if (!items.length) { alert('Add items to the wheel before saving a preset.'); return; }
   const name = prompt('Preset name:', currentPreset || '');
   if (!name) return;
@@ -581,6 +621,7 @@ function saveAsPreset() {
   refreshPresetSel();
 }
 function deletePreset() {
+  if (spinning) return;
   const name = document.getElementById('presetSel').value;
   if (!name || !presets[name]) return;
   if (!confirm(`Delete preset "${name}"?`)) return;
@@ -597,18 +638,86 @@ function exportPresets() {
   a.click();
   URL.revokeObjectURL(a.href);
 }
+function validatePhrases(value, label) {
+  if (!Array.isArray(value) || !value.length)
+    throw new Error(`${label} must be a non-empty array of phrases.`);
+  return value.map((phrase, i) => {
+    if (typeof phrase !== 'string' || !phrase.trim())
+      throw new Error(`${label}: phrase ${i + 1} must be a non-empty string.`);
+    return phrase.trim();
+  });
+}
+function parseImport(data) {
+  if (Array.isArray(data)) return { phrases: validatePhrases(data, 'The file') };
+  if (!data || typeof data !== 'object' || !Object.keys(data).length)
+    throw new Error('Use an array of phrases or an object containing named presets.');
+  const named = Object.create(null);
+  for (const [name, value] of Object.entries(data)) {
+    if (!name.trim()) throw new Error('Each preset needs a name.');
+    named[name] = validatePhrases(value, `Preset "${name}"`);
+  }
+  return { named };
+}
 function importPresets(file) {
+  if (spinning) return;
+  const status = document.getElementById('importStatus');
+  status.textContent = '';
   const reader = new FileReader();
+  reader.onerror = () => { status.textContent = 'Could not read the file. Please choose it again.'; };
   reader.onload = () => {
+    if (spinning) { status.textContent = 'Wait for the spin to finish, then import again.'; return; }
     try {
-      const data = JSON.parse(reader.result);
-      if (!data || typeof data !== 'object' || Array.isArray(data)) throw 0;
-      Object.assign(presets, data);
-      saveJSON('stw-presets', presets);
-      refreshPresetSel();
-    } catch (e) { alert('That file is not a valid presets export.'); }
+      const parsed = parseImport(JSON.parse(reader.result));
+      const groups = parsed.named ? Object.entries(parsed.named) : [['Phrases', parsed.phrases]];
+      const count = groups.reduce((total, [, phrases]) => total + phrases.length, 0);
+      document.getElementById('importSummary').textContent = `${file.name}: ${count} phrases` +
+        (parsed.named ? ` across ${groups.length} presets.` : '.');
+      document.getElementById('importPreview').textContent = groups.map(([name, phrases]) =>
+        `${name} (${phrases.length})\n${phrases.slice(0, 5).join('\n')}${phrases.length > 5 ? '\n…' : ''}`).join('\n\n');
+      const conflicts = parsed.named ? Object.keys(parsed.named).filter(name => Object.prototype.hasOwnProperty.call(presets, name)) : [];
+      document.getElementById('importNote').textContent = parsed.named
+        ? (conflicts.length ? `Existing presets will be replaced: ${conflicts.join(', ')}. The current wheel stays as it is; select a preset after importing.`
+          : 'Presets will be saved. Select a preset to load its phrases onto the wheel.')
+        : 'Choose whether to replace the current wheel or add these phrases to it.';
+      document.getElementById('importAppend').hidden = !!parsed.named;
+      document.getElementById('importApply').textContent = parsed.named ? 'Import presets' : 'Replace wheel';
+      pendingImport = parsed;
+      updateControls();
+      document.getElementById('importOv').classList.add('on');
+      document.getElementById('importCancel').focus();
+    } catch (e) {
+      status.textContent = e instanceof SyntaxError ? 'Invalid JSON. Check the file’s commas, brackets, and quotation marks.' : e.message;
+    }
   };
   reader.readAsText(file);
+}
+function closeImport() {
+  pendingImport = null;
+  document.getElementById('importOv').classList.remove('on');
+  updateControls();
+  document.getElementById('presetImportBtn').focus();
+}
+function applyImport(append) {
+  if (spinning || !pendingImport) return;
+  if (pendingImport.named) {
+    Object.assign(presets, pendingImport.named);
+    saveJSON('stw-presets', presets);
+    refreshPresetSel();
+    document.getElementById('importStatus').textContent = 'Presets imported. Select a preset to load the wheel.';
+  } else {
+    items = append ? items.concat(pendingImport.phrases) : pendingImport.phrases.slice();
+    currentPreset = '';
+    saveJSON('stw-current-preset', '');
+    refreshPresetSel();
+    render(); draw();
+    document.getElementById('importStatus').textContent = `${items.length} phrases now on the wheel.`;
+  }
+  closeImport();
+}
+function updateControls() {
+  const locked = spinning || !!pendingImport;
+  document.querySelectorAll('.pside button, .pside input, .pside textarea, .pside select').forEach(el => { el.disabled = locked; });
+  document.getElementById('spinBtn').disabled = locked || items.length < 2;
 }
 
 /* ── RENDER LIST ─────────────────────────────────── */
@@ -623,7 +732,7 @@ function render() {
     items.length === 0 ? 'Add items below to begin'
     : items.length === 1 ? '1 item — add at least 2 to spin'
     : `${items.length} items on the wheel`;
-  document.getElementById('spinBtn').disabled = items.length < 2;
+  updateControls();
   const list = document.getElementById('ilist');
   if (!items.length) {
     list.innerHTML = '<div class="empty"><em>🎡</em>Nothing on the wheel yet</div>'; return;
@@ -636,6 +745,7 @@ function render() {
       <button class="xbtn" data-i="${i}" title="Remove">×</button>
     </div>`).join('');
   list.querySelectorAll('.xbtn').forEach(b => b.addEventListener('click', () => del(+b.dataset.i)));
+  updateControls();
 }
 
 /* ── TABS ────────────────────────────────────────── */
@@ -678,6 +788,19 @@ document.getElementById('tA')      .addEventListener('click', () => switchTab('A
 document.getElementById('tB')      .addEventListener('click', () => switchTab('B'));
 document.getElementById('themeBtn').addEventListener('click', toggleTheme);
 document.getElementById('kioskBtn') .addEventListener('click', toggleKiosk);
+document.getElementById('displayExit').addEventListener('click', () => setKiosk(false));
+document.getElementById('importCancel').addEventListener('click', closeImport);
+document.getElementById('importApply').addEventListener('click', () => applyImport(false));
+document.getElementById('importAppend').addEventListener('click', () => applyImport(true));
+document.getElementById('importOv').addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeImport();
+  if (e.key === 'Tab') {
+    const buttons = [...document.querySelectorAll('#importOv button')].filter(button => !button.hidden);
+    const first = buttons[0], last = buttons[buttons.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+});
 document.getElementById('presetSel').addEventListener('change', e => { if (e.target.value) loadPreset(e.target.value); });
 document.getElementById('presetSaveBtn').addEventListener('click', saveAsPreset);
 document.getElementById('presetDelBtn').addEventListener('click', deletePreset);
@@ -690,8 +813,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.b
 document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) document.body.classList.remove('kiosk'); resizeCvs(); draw(); });
 
 /* ── INIT ────────────────────────────────────────── */
-try { const s = localStorage.getItem('stw-theme'); if (s) setTheme(s); } catch(e){}
 resizeCvs();
+try { const s = localStorage.getItem('stw-theme'); if (s === 'dark' || s === 'light') setTheme(s); } catch(e){}
 refreshPresetSel();
 draw();
 render();
