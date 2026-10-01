@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,17 +8,17 @@
 /* ── THEME TOKENS ─────────────────────────────────── */
 :root,
 [data-theme="dark"] {
-  --bg:#0C0C1A; --surf:#14142A; --surf2:#1C1C36;
+  --bg:#182D30; --surf:#20383B; --surf2:#294448;
   --bdr:rgba(255,255,255,.07); --txt:#F5F5FF;
-  --muted:rgba(255,255,255,.36); --acc:#FFB800;
-  --acc-d:rgba(255,184,0,.13); --red:#FF5656;
+  --muted:#B9CCCE; --acc:#8BC5D3;
+  --acc-d:rgba(139,197,211,.13); --red:#FF5656;
   --modal-bg:rgba(0,0,0,.82);
 }
 [data-theme="light"] {
-  --bg:#F4F3FA; --surf:#FFFFFF; --surf2:#EDEBF6;
-  --bdr:rgba(0,0,0,.09); --txt:#18182E;
-  --muted:rgba(0,0,0,.42); --acc:#B07B00;
-  --acc-d:rgba(176,123,0,.12); --red:#C83030;
+  --bg:#F8F7F3; --surf:#FFFFFF; --surf2:#EDF4F3;
+  --bdr:rgba(31,48,51,.15); --txt:#1F3033;
+  --muted:#526A6D; --acc:#327C78;
+  --acc-d:rgba(50,124,120,.10); --red:#C83030;
   --modal-bg:rgba(0,0,0,.55);
 }
 
@@ -236,6 +236,62 @@ body.kiosk .spin-btn{font-size:clamp(22px,3vw,36px);padding:18px 70px}
 .import-status{padding:0 14px;color:var(--txt);line-height:1.5}
 .import-status:empty{display:none}
 @media(max-width:480px){.mcard{padding:24px 18px}.pbar{gap:6px}}
+/* Brand layout: logo files retain their original dimensions and margins. */
+body{min-height:100vh}
+button,input,textarea,select{font-family:inherit}
+.field,.ta{font-size:14px;line-height:1.5}
+.abtn,.mb,.dngr{font-family:inherit;font-size:13px;font-weight:600}
+.hdr{height:100px;padding:0 max(20px,calc((100vw - 1000px)/2));gap:18px}
+.brand{width:240px;flex-shrink:0}
+.brand img{display:block;width:100%;height:auto}
+.brand .logo-dark{display:none}
+[data-theme="dark"] .brand .logo-light{display:none}
+[data-theme="dark"] .brand .logo-dark{display:block}
+.hdr h1{font-size:17px;font-weight:600;letter-spacing:0}
+.main{width:100%;max-width:1000px;margin:0 auto;padding:24px 24px 40px;gap:24px}
+.wside{padding:0 24px 24px;gap:14px;border-bottom:none}
+#wc{display:block;flex-shrink:0}
+.spin-btn{font-size:16px;letter-spacing:.8px;padding:14px 60px;color:#FFFFFF;box-shadow:none}
+[data-theme="dark"] .spin-btn{color:#182D30}
+.spin-btn:hover:not(:disabled){box-shadow:0 5px 16px rgba(31,48,51,.18)}
+.clabel{font-size:14px}
+.pside{width:100%;max-width:760px;align-self:center;background:var(--surf);border:1px solid var(--bdr);border-radius:16px;overflow:hidden}
+.pbar{padding:16px;gap:8px}
+.pselect{flex-basis:220px;font-family:inherit;font-size:14px}
+.abtn{border-color:var(--bdr)}
+.abtn:hover{background:var(--surf2)}
+.dngr{color:var(--red)}
+.larea{padding:0 16px 20px}
+.lhdr{background:var(--surf);padding:12px 0}
+.ltitle{font-size:12px}
+.itxt{font-size:14px}
+.hint{font-size:12px}
+.tab{font-size:14px}
+.irow{background:var(--surf2);padding:10px 12px}
+body.kiosk .hdr{display:flex;justify-content:center;height:100px;flex-shrink:0;background:var(--bg);border:0;padding:0}
+body.kiosk .hdr h1,body.kiosk .hdr-r{display:none}
+body.kiosk .main{height:calc(100vh - 100px);max-width:none;padding:0;gap:0;min-height:0}
+body.kiosk .wside{padding:0 24px 20px;min-height:0}
+body.kiosk .spin-btn{font-size:clamp(18px,2.5vw,28px);padding:16px 64px}
+@media(max-width:600px){
+  .hdr{height:88px;padding:0 12px;gap:8px}
+  .brand{width:170px}
+  .hdr h1{display:none}
+  .hdr-r{gap:6px}
+  .badge{padding:3px 6px}
+  .main{padding:18px 12px 28px;gap:12px}
+  .wside{padding:0 0 12px}
+  .pbar{padding:12px}
+  .pselect{flex-basis:100%}
+  .pbar .abtn{flex:1}
+  .display-exit{top:8px;right:8px;padding:8px 10px;font-size:12px}
+}
+#celebrationPhrase{flex:none;width:100%;min-height:44px}
+.celebration{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+.celebration-emoji{position:absolute;bottom:-60px;left:var(--left);font-size:clamp(26px,4vw,46px);animation:celebrate 4s var(--delay) ease-out both}
+#ov .mcard{position:relative;z-index:2}
+@keyframes celebrate{0%{opacity:0;transform:translateY(0) rotate(0)}10%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translate(var(--drift),-110vh) rotate(var(--turn))}}
+@media(prefers-reduced-motion:reduce){.celebration-emoji{animation:none;bottom:auto;top:var(--left)}.mcard{animation:none}}
 </style>
 </head>
 <body>
@@ -243,12 +299,12 @@ body.kiosk .spin-btn{font-size:clamp(22px,3vw,36px);padding:18px 70px}
 
 <!-- HEADER -->
 <div class="hdr">
-  <div class="hdr-ico">🎡</div>
+  <div class="brand"><img class="logo-light" src="assets/logo-horizontal-black.png" alt="Ahl Masr Foundation"><img class="logo-dark" src="assets/logo-horizontal-white.png" alt="Ahl Masr Foundation"></div>
   <h1>Spin the Wheel</h1>
   <div class="hdr-r">
     <div class="badge" id="badge">0 items</div>
     <button class="theme-btn" id="kioskBtn" title="Enter display mode" aria-label="Enter display mode">⛶</button>
-    <button class="theme-btn" id="themeBtn" title="Toggle theme">☀️</button>
+    <button class="theme-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle color theme">🌙</button>
   </div>
 </div>
 
@@ -268,16 +324,17 @@ body.kiosk .spin-btn{font-size:clamp(22px,3vw,36px);padding:18px 70px}
       <select class="pselect" id="presetSel">
         <option value="">Load preset…</option>
       </select>
-      <button class="abtn" id="presetSaveBtn" title="Save current wheel as a preset">💾 Save</button>
-      <button class="theme-btn" id="presetExportBtn" title="Export all presets to a file">⬇</button>
-      <button class="theme-btn" id="presetImportBtn" title="Import presets from a file">⬆</button>
-      <button class="dngr" id="presetDelBtn" title="Delete selected preset">🗑</button>
+      <button class="abtn" id="presetSaveBtn" title="Save current wheel as a preset">Save preset</button>
+      <button class="abtn" id="presetExportBtn" title="Export all presets to a file">↓ Export presets</button>
+      <button class="abtn" id="presetImportBtn" title="Import phrases or presets from a file">↑ Import file</button>
+      <button class="dngr" id="presetDelBtn" title="Delete selected preset">Delete preset</button>
       <input type="file" id="presetFile" accept=".json,application/json" style="display:none">
     </div>
     <p class="import-status" id="importStatus" role="status" aria-live="polite"></p>
     <div class="tabs">
       <button class="tab on" id="tA">Add One</button>
       <button class="tab" id="tB">Bulk Add</button>
+      <button class="tab" id="tC">Settings</button>
     </div>
     <div class="add-area">
       <div class="pane on" id="pA">
@@ -292,6 +349,14 @@ body.kiosk .spin-btn{font-size:clamp(22px,3vw,36px);padding:18px 70px}
         <div class="hint">One item per line · Empty lines are skipped</div>
         <button class="abtn fw" id="addBulk">+ Add All to Wheel</button>
       </div>
+      <div class="pane" id="pC">
+        <label for="spinDuration">Spin duration: <output id="durationValue" for="spinDuration">6 seconds</output></label>
+        <input id="spinDuration" type="range" min="3" max="20" step="1" value="6" style="width:100%;accent-color:var(--acc)">
+        <div class="hint">3–20 seconds · Saved automatically on this computer</div>
+        <label for="celebrationPhrase">Celebration phrase</label>
+        <select class="pselect" id="celebrationPhrase" aria-describedby="celebrationHint"><option value="">None</option></select>
+        <div class="hint" id="celebrationHint">Show 🎉 🏆 ✨ when this phrase wins. Every phrase keeps its usual chance of winning.</div>
+      </div>
     </div>
     <div class="larea">
       <div class="lhdr">
@@ -305,6 +370,7 @@ body.kiosk .spin-btn{font-size:clamp(22px,3vw,36px);padding:18px 70px}
 
 <!-- WINNER MODAL -->
 <div class="ov" id="ov" role="dialog" aria-modal="true" aria-labelledby="mwin">
+  <div class="celebration" id="celebration" aria-hidden="true"></div>
   <div class="mcard">
     <div class="mey">✨ The Wheel Has Spoken</div>
     <div class="mwin" id="mwin"></div>
@@ -334,9 +400,7 @@ body.kiosk .spin-btn{font-size:clamp(22px,3vw,36px);padding:18px 70px}
 /* ── PALETTE ─────────────────────────────────────── */
 /* Colours chosen so auto luminance check picks correct text colour */
 const PAL = [
-  '#E63946','#D47820','#2A9D8F','#457B9D',
-  '#9B5DE5','#C8429A','#3A86FF','#00956A',
-  '#C44200','#B07B00','#0088B4','#7B36C4'
+  '#408E89','#F87065','#8BC5D3','#ECA456'
 ];
 const FF = "'Segoe UI',system-ui,sans-serif";
 
@@ -349,6 +413,46 @@ let items = loadJSON('stw-items', []), angle = Math.random() * Math.PI * 2;
 let spinning = false, lastWin = -1, aCtx = null;
 let presets = Object.assign(Object.create(null), loadJSON('stw-presets', {})), currentPreset = loadJSON('stw-current-preset', '');
 let pendingImport = null;
+let celebrationPhrase = loadJSON('stw-celebration-phrase', '');
+if (typeof celebrationPhrase !== 'string') celebrationPhrase = '';
+let celebrationTimer;
+function refreshCelebrationPhrases() {
+  const select = document.getElementById('celebrationPhrase');
+  select.replaceChildren(new Option('None', ''));
+  for (const phrase of new Set(items)) select.add(new Option(phrase, phrase));
+  select.value = items.includes(celebrationPhrase) ? celebrationPhrase : '';
+}
+function clearCelebration() {
+  clearTimeout(celebrationTimer);
+  document.getElementById('celebration').replaceChildren();
+}
+function celebrateWinner() {
+  clearCelebration();
+  if (!celebrationPhrase || items[lastWin] !== celebrationPhrase) return;
+  const layer = document.getElementById('celebration');
+  const emojis = ['🎉', '🏆', '✨', '🎊', '🥳'];
+  for (let i = 0; i < 28; i++) {
+    const emoji = document.createElement('span');
+    emoji.className = 'celebration-emoji';
+    emoji.textContent = emojis[i % emojis.length];
+    emoji.style.setProperty('--left', `${Math.random() * 96}%`);
+    emoji.style.setProperty('--delay', `${Math.random() * 1.2}s`);
+    emoji.style.setProperty('--drift', `${Math.random() * 160 - 80}px`);
+    emoji.style.setProperty('--turn', `${Math.random() * 180 - 90}deg`);
+    layer.append(emoji);
+  }
+  celebrationTimer = setTimeout(clearCelebration, 5500);
+}
+const savedDuration = loadJSON('stw-spin-duration', 6);
+let spinDuration = Number.isInteger(savedDuration) && savedDuration >= 3 && savedDuration <= 20 ? savedDuration : 6;
+function updateDuration() {
+  if (spinning || pendingImport) return;
+  const value = Number(document.getElementById('spinDuration').value);
+  if (!Number.isInteger(value) || value < 3 || value > 20) return;
+  spinDuration = value;
+  document.getElementById('durationValue').textContent = `${value} seconds`;
+  saveJSON('stw-spin-duration', value);
+}
 
 /* ── CANVAS ──────────────────────────────────────── */
 const cvs = document.getElementById('wc');
@@ -356,20 +460,22 @@ const ctx = cvs.getContext('2d');
 let CX, CY, R;
 
 function resizeCvs() {
-  /* Internal drawing buffer — always 480×460 */
-  cvs.width = 480; cvs.height = 460;
-  CX = 215; CY = 230; R = 197;   /* wheel centre + radius in draw-space */
-
   const kiosk = document.body.classList.contains('kiosk');
   const wside = document.querySelector('.wside');
-  const availW = wside.clientWidth - 24;
-  /* Kiosk: grow to fill the screen (street display). Normal: shrink to fit only. */
+  const availW = Math.max(1, wside.clientWidth - 48);
   const scale = kiosk
-    ? Math.min(availW / 480, Math.max(1, window.innerHeight - 200) / 460, 3)
-    : Math.min(availW / 480, 1);
+    ? Math.min(availW / 480, Math.max(1, window.innerHeight - 250) / 460, 3)
+    : Math.min(availW / 480, 1.2);
+  const width = Math.round(480 * scale);
+  const height = Math.round(460 * scale);
+  const dpr = window.devicePixelRatio || 1;
+  cvs.width = Math.round(width * dpr);
+  cvs.height = Math.round(height * dpr);
+  cvs.style.width = width + 'px';
+  cvs.style.height = height + 'px';
+  ctx.setTransform(cvs.width / 480, 0, 0, cvs.height / 460, 0, 0);
+  CX = 240; CY = 230; R = 197;
 
-  cvs.style.width  = Math.round(480 * scale) + 'px';
-  cvs.style.height = Math.round(460 * scale) + 'px';
 }
 
 /* ── AUDIO ───────────────────────────────────────── */
@@ -397,7 +503,7 @@ function lum(hex) {
   return .2126*r + .7152*g + .0722*b;
 }
 function txtCol(hex)  { return lum(hex) > 155 ? 'rgba(0,0,0,.85)'    : 'rgba(255,255,255,.95)'; }
-function shdwCol(hex) { return lum(hex) > 155 ? 'rgba(255,255,255,.5)' : 'rgba(0,0,0,.55)'; }
+
 
 /* ── TEXT FITTING — no ellipsis ──────────────────── */
 /* Word-wrap into as many lines as needed so every line fits within maxW.
@@ -428,28 +534,61 @@ function wrapLines(text, maxW) {
   return out;
 }
 
+/* Fit a text rectangle inside both the wedge edges and the circular rim.
+   Cache layouts so spinning only rotates already measured labels. */
+const labelLayouts = new Map();
+function fitLabel(text, count, radius) {
+  const key = JSON.stringify([text, count, radius]);
+  if (labelLayouts.has(key)) return labelLayouts.get(key);
+  const halfAngle = Math.PI / count;
+  const padding = 6;
+  let layout = null;
+  for (let size = 18; size >= 1 && !layout; size -= .5) {
+    ctx.font = `600 ${size}px ${FF}`;
+    for (let left = 30; left <= radius * .75; left += 4) {
+      // An inscribed rectangle has its narrowest wedge clearance at its left edge.
+      const halfHeight = count <= 2 ? radius : left * Math.tan(halfAngle) - padding;
+      if (halfHeight <= 0) continue;
+      for (let right = radius - padding; right > left + 16; right -= 4) {
+        const lines = wrapLines(text, right - left);
+        const height = lines.length * size * 1.35;
+        const top = height / 2 + padding;
+        if (height / 2 <= halfHeight && Math.hypot(right, top) <= radius - padding) {
+          layout = { size, lines, x: (left + right) / 2 };
+          break;
+        }
+      }
+      if (layout) break;
+    }
+  }
+  // Extremely long labels retain their full text in the list and winner dialog.
+  if (!layout) layout = { size: 1, lines: wrapLines(text, radius / 2), x: radius * .6 };
+  if (labelLayouts.size > 500) labelLayouts.clear();
+  labelLayouts.set(key, layout);
+  return layout;
+}
+
 /* ── DRAW ────────────────────────────────────────── */
 function isDark() { return document.documentElement.dataset.theme !== 'light'; }
 
 function draw() {
   const dark = isDark();
-  ctx.clearRect(0, 0, cvs.width, cvs.height);
+  ctx.clearRect(0, 0, 480, 460);
   const n = items.length;
 
   /* Empty state */
   if (n === 0) {
     ctx.beginPath(); ctx.arc(CX, CY, R, 0, Math.PI*2);
-    ctx.fillStyle = dark ? '#1A1A2E' : '#DDDBE9'; ctx.fill();
+    ctx.fillStyle = dark ? '#294448' : '#EDF4F3'; ctx.fill();
     ctx.strokeStyle = dark ? 'rgba(255,255,255,.06)' : 'rgba(0,0,0,.08)';
     ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = dark ? 'rgba(255,255,255,.22)' : 'rgba(0,0,0,.3)';
+    ctx.fillStyle = dark ? '#B9CCCE' : '#526A6D';
     ctx.font = `14px ${FF}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText('Add items to get started', CX, CY);
     drawPtr(dark); return;
   }
 
   const arc = (Math.PI*2) / n;
-  const maxRW = R - 38;   /* max text width along the radius */
 
   /* Draw segments */
   for (let i = 0; i < n; i++) {
@@ -460,38 +599,27 @@ function draw() {
     ctx.strokeStyle = 'rgba(0,0,0,.28)'; ctx.lineWidth = 1.5; ctx.stroke();
   }
 
-  /* Draw text on each segment — no ellipsis, auto-size + wrap */
+  /* Each label uses a rectangle that fits within its own segment. */
   for (let i = 0; i < n; i++) {
-    const mid  = angle + i*arc + arc/2;
-    const col  = PAL[i % PAL.length];
-    /* available height (perpendicular to radius) at ~65% of radius */
-    const perpH = Math.max(8, 2 * R * .65 * Math.sin(arc / 2));
-    const maxFs = Math.min(15, perpH * .9);
-    const minFs = 7;
-
+    const mid = angle + i * arc + arc / 2;
+    const layout = fitLabel(items[i], n, R);
     ctx.save();
-    ctx.translate(CX, CY); ctx.rotate(mid);
-    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-    ctx.fillStyle  = txtCol(col);
-    ctx.shadowColor = shdwCol(col); ctx.shadowBlur = 3;
-
-    const text = items[i];
-
-    /* Find the largest font size (down to minFs) whose wrapped lines both
-       fit the segment width AND the available height — wraps to as many
-       lines as needed instead of ever leaving one long unwrapped line
-       that crosses the wheel. */
-    let lines = [text], fs = maxFs;
-    for (fs = maxFs; fs >= minFs; fs--) {
-      ctx.font = `bold ${fs}px ${FF}`;
-      const w = wrapLines(text, maxRW);
-      if (w.length * (fs * 1.25) <= perpH || fs === minFs) { lines = w; break; }
-    }
-
-    ctx.font = `bold ${fs}px ${FF}`;
-    const lh = fs * 1.25;
-    const top = -((lines.length - 1) * lh) / 2;
-    lines.forEach((ln, li) => ctx.fillText(ln, R - 18, top + li * lh));
+    ctx.translate(CX, CY);
+    ctx.rotate(mid);
+    // Guard against any glyph overhang or unusually long imported labels.
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, R - 4, -arc / 2, arc / 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = txtCol(PAL[i % PAL.length]);
+    ctx.shadowBlur = 0;
+    ctx.font = `600 ${layout.size}px ${FF}`;
+    const lineHeight = layout.size * 1.35;
+    const top = -(layout.lines.length - 1) * lineHeight / 2;
+    layout.lines.forEach((line, j) => ctx.fillText(line, layout.x, top + j * lineHeight));
     ctx.restore();
   }
 
@@ -502,11 +630,11 @@ function draw() {
 
   /* Centre cap */
   ctx.beginPath(); ctx.arc(CX, CY, 18, 0, Math.PI*2);
-  ctx.fillStyle = dark ? '#0C0C1A' : '#F4F3FA'; ctx.fill();
+  ctx.fillStyle = dark ? '#182D30' : '#F8F7F3'; ctx.fill();
   ctx.strokeStyle = dark ? 'rgba(255,255,255,.18)' : 'rgba(0,0,0,.12)';
   ctx.lineWidth = 2; ctx.stroke();
   ctx.beginPath(); ctx.arc(CX, CY, 6, 0, Math.PI*2);
-  ctx.fillStyle = '#FFB800'; ctx.fill();
+  ctx.fillStyle = '#F87065'; ctx.fill();
 
   drawPtr(dark);
 }
@@ -521,7 +649,7 @@ function drawPtr(dark) {
   ctx.lineTo(bx, ty - h);
   ctx.lineTo(bx, ty + h);
   ctx.closePath();
-  ctx.fillStyle = '#FFB800'; ctx.fill();
+  ctx.fillStyle = '#F87065'; ctx.fill();
   ctx.strokeStyle = dark ? 'rgba(255,255,255,.22)' : 'rgba(0,0,0,.18)';
   ctx.lineWidth = 1; ctx.stroke();
   ctx.restore();
@@ -540,23 +668,28 @@ function doSpin() {
   if (spinning || pendingImport || items.length < 2) return;
   ensAudio(); spinning = true;
   updateControls();
-  document.getElementById('spinBtn').disabled = true;
-  let vel = .18 + Math.random() * .13, lastSeg = -1;
-  (function loop() {
-    vel *= .9876; angle += vel;
-    const n = items.length;
-    if (n) {
-      const arc = (Math.PI*2) / n;
-      const seg = Math.floor((((-angle % (Math.PI*2)) + Math.PI*2) % (Math.PI*2)) / arc);
-      if (seg !== lastSeg) { doTick(); lastSeg = seg; }
-    }
+  const duration = spinDuration * 1000;
+  const startAngle = angle;
+  // Whole turns maintain a comfortable speed; the random final offset selects the winner.
+  const distance = (Math.max(3, Math.round(spinDuration * .8)) + Math.random()) * Math.PI * 2;
+  const started = performance.now();
+  let lastSeg = -1;
+  function loop(now) {
+    const progress = Math.min(1, Math.max(0, (now - started) / duration));
+    angle = startAngle + distance * (1 - Math.pow(1 - progress, 3));
+    const seg = winIdx();
+    if (seg !== lastSeg) { doTick(); lastSeg = seg; }
     draw();
-    if (vel > .0028) { requestAnimationFrame(loop); }
+    if (progress < 1) requestAnimationFrame(loop);
     else {
+      angle %= Math.PI * 2;
       lastWin = winIdx();
-      setTimeout(() => { showWin(); spinning = false; updateControls(); }, 260);
+      spinning = false;
+      updateControls();
+      showWin();
     }
-  })();
+  }
+  requestAnimationFrame(loop);
 }
 
 /* ── MODAL ───────────────────────────────────────── */
@@ -564,8 +697,9 @@ function showWin() {
   document.getElementById('mwin').textContent = items[lastWin];
   document.getElementById('ov').classList.add('on');
   document.getElementById('contBtn').focus();
+  celebrateWinner();
 }
-function closeOv() { document.getElementById('ov').classList.remove('on'); }
+function closeOv() { clearCelebration(); document.getElementById('ov').classList.remove('on'); }
 function spinAgain() {
   closeOv();
   if (items.length >= 2) doSpin();
@@ -726,6 +860,7 @@ function esc(s) {
           .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function render() {
+  refreshCelebrationPhrases();
   saveJSON('stw-items', items);
   document.getElementById('badge').textContent = `${items.length} item${items.length !== 1 ? 's' : ''}`;
   document.getElementById('clabel').textContent =
@@ -750,7 +885,7 @@ function render() {
 
 /* ── TABS ────────────────────────────────────────── */
 function switchTab(k) {
-  ['A','B'].forEach(x => {
+  ['A','B','C'].forEach(x => {
     document.getElementById('t'+x).classList.toggle('on', x === k);
     document.getElementById('p'+x).classList.toggle('on', x === k);
   });
@@ -786,6 +921,13 @@ document.getElementById('contBtn') .addEventListener('click', closeOv);
 document.getElementById('spinAgainBtn').addEventListener('click', spinAgain);
 document.getElementById('tA')      .addEventListener('click', () => switchTab('A'));
 document.getElementById('tB')      .addEventListener('click', () => switchTab('B'));
+document.getElementById('tC').addEventListener('click', () => switchTab('C'));
+document.getElementById('spinDuration').addEventListener('input', updateDuration);
+document.getElementById('celebrationPhrase').addEventListener('change', event => {
+  if (spinning || pendingImport) return;
+  celebrationPhrase = event.target.value;
+  saveJSON('stw-celebration-phrase', celebrationPhrase);
+});
 document.getElementById('themeBtn').addEventListener('click', toggleTheme);
 document.getElementById('kioskBtn') .addEventListener('click', toggleKiosk);
 document.getElementById('displayExit').addEventListener('click', () => setKiosk(false));
@@ -813,6 +955,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.b
 document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) document.body.classList.remove('kiosk'); resizeCvs(); draw(); });
 
 /* ── INIT ────────────────────────────────────────── */
+document.getElementById('spinDuration').value = spinDuration;
+document.getElementById('durationValue').textContent = `${spinDuration} seconds`;
 resizeCvs();
 try { const s = localStorage.getItem('stw-theme'); if (s === 'dark' || s === 'light') setTheme(s); } catch(e){}
 refreshPresetSel();
