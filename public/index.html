@@ -268,11 +268,14 @@ button,input,textarea,select{font-family:inherit}
 .hint{font-size:12px}
 .tab{font-size:14px}
 .irow{background:var(--surf2);padding:10px 12px}
-body.kiosk .hdr{display:flex;justify-content:center;height:100px;flex-shrink:0;background:var(--bg);border:0;padding:0}
+body.kiosk{height:100dvh;min-height:0}
+body.kiosk .hdr{display:flex;justify-content:center;height:15%;flex:0 0 15%;background:var(--bg);border:0;padding:clamp(8px,1.5dvh,24px) clamp(16px,4vw,64px)}
+body.kiosk .brand{width:100%;height:100%;min-width:0;display:flex;align-items:center;justify-content:center}
+body.kiosk .brand img{width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain}
 body.kiosk .hdr h1,body.kiosk .hdr-r{display:none}
-body.kiosk .main{height:calc(100vh - 100px);max-width:none;padding:0;gap:0;min-height:0}
-body.kiosk .wside{padding:0 24px 20px;min-height:0}
-body.kiosk .spin-btn{font-size:clamp(18px,2.5vw,28px);padding:16px 64px}
+body.kiosk .main{height:85%;flex:1;max-width:none;padding:0;gap:0;min-height:0}
+body.kiosk .wside{padding:clamp(8px,1.5dvh,24px) clamp(16px,3vw,64px) clamp(16px,3dvh,48px);gap:clamp(12px,2dvh,36px);min-height:0}
+body.kiosk .spin-btn{flex-shrink:0;max-width:100%;font-size:clamp(18px,min(3vw,4dvh),48px);padding:clamp(12px,1.5dvh,28px) clamp(32px,6vw,120px)}
 @media(max-width:600px){
   .hdr{height:88px;padding:0 12px;gap:8px}
   .brand{width:170px}
@@ -286,7 +289,40 @@ body.kiosk .spin-btn{font-size:clamp(18px,2.5vw,28px);padding:16px 64px}
   .pbar .abtn{flex:1}
   .display-exit{top:8px;right:8px;padding:8px 10px;font-size:12px}
 }
+.emoji-settings{border:1px solid var(--bdr);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px;margin-top:8px;min-width:0}
+.emoji-settings input[type=range]{width:100%;accent-color:var(--acc)}
+.emoji-settings legend{padding:0 6px;font-weight:600}
 #celebrationPhrase{flex:none;width:100%;min-height:44px}
+.welcome{display:flex;position:fixed;inset:0;z-index:900;background:#F8F7F3;align-items:center;justify-content:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .5s ease,visibility 0s .5s}
+.fullscreen-emojis{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.fullscreen-emoji{position:absolute;top:-140px;left:var(--left);font-size:var(--size);line-height:1;opacity:1;animation:emoji-drift var(--duration) var(--delay) linear infinite;will-change:transform}
+body.kiosk>.hdr,body.kiosk>.main{position:relative;z-index:1}
+.welcome .fullscreen-emojis{position:absolute}
+.welcome-art{z-index:1}
+@keyframes emoji-drift{0%{transform:translate3d(0,0,0) rotate(-10deg)}25%{transform:translate3d(var(--drift),calc(25dvh + 70px),0) rotate(8deg)}50%{transform:translate3d(0,calc(50dvh + 140px),0) rotate(-8deg)}75%{transform:translate3d(calc(-1 * var(--drift)),calc(75dvh + 210px),0) rotate(10deg)}100%{transform:translate3d(0,calc(100dvh + 280px),0) rotate(-10deg)}}
+@media(prefers-reduced-motion:reduce){.fullscreen-emojis{display:none}}
+body.kiosk.welcoming .welcome{opacity:1;visibility:visible;pointer-events:auto;transition-delay:0s}
+.welcome-art{transform:translateY(24px) scale(.98);transition:transform .6s cubic-bezier(.22,1,.36,1)}
+body.welcoming .welcome-art{transform:translateY(0) scale(1)}
+body.kiosk .main,body.kiosk .hdr{transition:opacity .5s ease,transform .6s cubic-bezier(.22,1,.36,1)}
+body.kiosk.welcoming .main,body.kiosk.welcoming .hdr{opacity:0;transform:translateY(24px);pointer-events:none}
+.welcome-back{display:none;position:fixed;top:12px;left:12px;z-index:1000;padding:10px 18px;border:1px solid var(--bdr);border-radius:12px;background:var(--surf);color:var(--txt);font-size:14px;font-weight:600;cursor:pointer}
+body.kiosk:not(.welcoming) .welcome-back{display:block}
+@media(max-width:600px){.welcome-back{top:8px;left:8px;padding:8px 10px;font-size:12px}}
+@media(prefers-reduced-motion:reduce){.welcome,.welcome-art,body.kiosk .main,body.kiosk .hdr{transition:none;transform:none}}
+.welcome-art{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(20px,4dvh,64px);padding:clamp(20px,4dvh,64px) clamp(16px,4vw,64px)}
+.welcome-art img{display:block;width:auto;height:auto;max-width:100%;max-height:65%;min-height:0;object-fit:contain}
+.welcome-start{flex-shrink:0;width:min(72%,640px);padding:clamp(14px,2dvh,36px) 12px;border:3px solid #FFFFFF;border-radius:999px;background:#0B3942;color:#FFFFFF;font-size:clamp(22px,min(5vw,3.5dvh),60px);font-weight:800;box-shadow:0 8px 24px rgba(11,57,66,.3);cursor:pointer}
+.welcome-start:hover{background:#327C78}
+.welcome-start:focus-visible{outline:4px solid #FFB543;outline-offset:5px}
+.answer-editor{margin-top:8px;font-size:14px}
+.answer-editor summary{cursor:pointer;color:var(--acc);padding:6px 0}
+.answer-editor form{display:flex;flex-direction:column;gap:8px;padding:10px 0}
+.answer-choices{display:grid;gap:12px;margin-bottom:16px;text-align:start}
+.answer-choice{padding:16px 24px;background:var(--surf2);color:var(--txt);border:2px solid var(--bdr);border-radius:12px;font-size:clamp(18px,2.5vw,30px);cursor:pointer}
+.answer-choice.correct{border-color:#327C78;background:#D9F3E5;color:#153E2E}
+.answer-choice.wrong{border-color:#C83030;background:#FFE4E4;color:#852020}
+.answer-feedback{font-size:22px;min-height:32px;margin-bottom:18px}
 .celebration{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:1}
 .celebration-emoji{position:absolute;bottom:-60px;left:var(--left);font-size:clamp(26px,4vw,46px);animation:celebrate 4s var(--delay) ease-out both}
 #ov .mcard{position:relative;z-index:2}
@@ -296,6 +332,14 @@ body.kiosk .spin-btn{font-size:clamp(18px,2.5vw,28px);padding:16px 64px}
 </head>
 <body>
 <button class="display-exit" id="displayExit">← Setup</button>
+<button class="welcome-back" id="welcomeBack">← Welcome screen</button>
+<section class="welcome" aria-label="Welcome to the challenge" inert>
+  <div class="fullscreen-emojis" id="welcomeEmojis" aria-hidden="true"></div>
+  <div class="welcome-art">
+    <img src="assets/challenge-sticker.png" alt="قد التحدي!!!">
+    <button class="welcome-start" id="welcomeStart" lang="ar" dir="rtl">ابدأ التحدي ←</button>
+  </div>
+</section>
 
 <!-- HEADER -->
 <div class="hdr">
@@ -314,7 +358,7 @@ body.kiosk .spin-btn{font-size:clamp(18px,2.5vw,28px);padding:16px 64px}
   <!-- WHEEL -->
   <div class="wside">
     <canvas id="wc" role="img" aria-label="Wheel of phrases"></canvas>
-    <button class="spin-btn" id="spinBtn">SPIN</button>
+    <button class="spin-btn" id="spinBtn" lang="ar" dir="rtl">ابدأ</button>
     <div class="clabel" id="clabel">Add items below to begin</div>
   </div>
 
@@ -356,6 +400,25 @@ body.kiosk .spin-btn{font-size:clamp(18px,2.5vw,28px);padding:16px 64px}
         <label for="celebrationPhrase">Celebration phrase</label>
         <select class="pselect" id="celebrationPhrase" aria-describedby="celebrationHint"><option value="">None</option></select>
         <div class="hint" id="celebrationHint">Show 🎉 🏆 ✨ when this phrase wins. Every phrase keeps its usual chance of winning.</div>
+        <fieldset class="emoji-settings">
+          <legend>Fullscreen welcome emojis</legend>
+          <label><input type="checkbox" id="emojiEnabled"> Show floating emojis</label>
+          <label for="emojiCount">Quantity: <output id="emojiCountValue" for="emojiCount"></output></label>
+          <input id="emojiCount" type="range" min="8" max="200" step="1">
+          <label for="emojiMinSize">Smallest size: <output id="emojiMinSizeValue" for="emojiMinSize"></output></label>
+          <input id="emojiMinSize" type="range" min="12" max="120" step="1">
+          <label for="emojiMaxSize">Largest size: <output id="emojiMaxSizeValue" for="emojiMaxSize"></output></label>
+          <input id="emojiMaxSize" type="range" min="12" max="120" step="1">
+          <label for="emojiSpeed">Travel time: <output id="emojiSpeedValue" for="emojiSpeed"></output></label>
+          <input id="emojiSpeed" type="range" min="3" max="30" step="1">
+          <div class="hint">Lower travel time means faster movement.</div>
+          <label for="emojiSway">Sideways sway: <output id="emojiSwayValue" for="emojiSway"></output></label>
+          <input id="emojiSway" type="range" min="0" max="100" step="1">
+          <label for="emojiSymbols">Your emojis</label>
+          <input class="field" id="emojiSymbols" type="text" placeholder="💪 🔥 ⭐ 🙌 👏 🚀 ✨ 🏆" aria-describedby="emojiSymbolsHint">
+          <div class="hint" id="emojiSymbolsHint">Separate each emoji with a space. Empty uses the default set. Saved automatically on this device; shown only on the welcome screen.</div>
+          <div class="row"><button class="abtn" id="emojiPreview" type="button">Preview fullscreen</button><button class="abtn" id="emojiReset" type="button">Reset emojis</button></div>
+        </fieldset>
       </div>
     </div>
     <div class="larea">
@@ -374,9 +437,12 @@ body.kiosk .spin-btn{font-size:clamp(18px,2.5vw,28px);padding:16px 64px}
   <div class="mcard">
     <div class="mey">✨ The Wheel Has Spoken</div>
     <div class="mwin" id="mwin"></div>
+    <div class="answer-choices" id="answerChoices" dir="auto"></div>
+    <div class="answer-feedback" id="answerFeedback" role="status" aria-live="polite" lang="ar" dir="rtl"></div>
     <div class="macts">
-      <button class="mb mb-s" id="spinAgainBtn">Spin Again</button>
-      <button class="mb mb-p" id="contBtn">Continue →</button>
+      <button class="mb mb-s" id="spinAgainBtn" lang="ar" dir="rtl">حاول تاني</button>
+      <button class="mb mb-p" id="contBtn" lang="ar" dir="rtl">متابعة ←</button>
+      <button class="mb mb-s" id="resultHomeBtn" lang="ar" dir="rtl">الشاشة الرئيسية</button>
     </div>
   </div>
 </div>
@@ -413,22 +479,62 @@ let items = loadJSON('stw-items', []), angle = Math.random() * Math.PI * 2;
 let spinning = false, lastWin = -1, aCtx = null;
 let presets = Object.assign(Object.create(null), loadJSON('stw-presets', {})), currentPreset = loadJSON('stw-current-preset', '');
 let pendingImport = null;
+const EMOJI_DEFAULTS = { enabled: true, count: 120, minSize: 16, maxSize: 112, speed: 7, sway: 45, symbols: '💪 🔥 ⭐ 🙌 👏 🚀 ✨ 🏆' };
+function normalizeEmojiSettings(value) {
+  const settings = { ...EMOJI_DEFAULTS };
+  if (!value || typeof value !== 'object') return settings;
+  for (const [key, min, max] of [['count',8,200],['minSize',12,120],['maxSize',12,120],['speed',3,30],['sway',0,100]]) {
+    if (Number.isFinite(value[key])) settings[key] = Math.round(Math.max(min, Math.min(max, value[key])));
+  }
+  settings.maxSize = Math.max(settings.minSize, settings.maxSize);
+  if (typeof value.enabled === 'boolean') settings.enabled = value.enabled;
+  if (typeof value.symbols === 'string') settings.symbols = value.symbols;
+  return settings;
+}
+let emojiSettings = normalizeEmojiSettings(loadJSON('stw-welcome-emojis', EMOJI_DEFAULTS));
+function syncEmojiControls() {
+  document.getElementById('emojiEnabled').checked = emojiSettings.enabled;
+  document.getElementById('emojiSymbols').value = emojiSettings.symbols;
+  for (const [suffix, key, unit] of [['Count','count',''],['MinSize','minSize',' px'],['MaxSize','maxSize',' px'],['Speed','speed',' seconds'],['Sway','sway',' px']]) {
+    document.getElementById('emoji' + suffix).value = emojiSettings[key];
+    document.getElementById('emoji' + suffix + 'Value').textContent = emojiSettings[key] + unit;
+  }
+}
+function saveEmojiSettings() {
+  saveJSON('stw-welcome-emojis', emojiSettings);
+  syncEmojiControls();
+  refreshFullscreenEmojis();
+}
+
+function itemText(item) { return typeof item === 'string' ? item : item.text; }
+function cloneItems(value) { return JSON.parse(JSON.stringify(value)); }
+const correctSound = new Audio('assets/correct-answer.mp3');
+const wrongSound = new Audio('assets/wrong-answer.m4a');
+function stopAnswerSounds() {
+  for (const sound of [correctSound, wrongSound]) { sound.pause(); sound.currentTime = 0; }
+}
+function playAnswerSound(correct) {
+  stopAnswerSounds();
+  (correct ? correctSound : wrongSound).play().catch(() => {
+    document.getElementById('answerFeedback').textContent += ' (تعذر تشغيل الصوت)';
+  });
+}
 let celebrationPhrase = loadJSON('stw-celebration-phrase', '');
 if (typeof celebrationPhrase !== 'string') celebrationPhrase = '';
 let celebrationTimer;
 function refreshCelebrationPhrases() {
   const select = document.getElementById('celebrationPhrase');
   select.replaceChildren(new Option('None', ''));
-  for (const phrase of new Set(items)) select.add(new Option(phrase, phrase));
-  select.value = items.includes(celebrationPhrase) ? celebrationPhrase : '';
+  for (const phrase of new Set(items.map(itemText))) select.add(new Option(phrase, phrase));
+  select.value = items.some(item => itemText(item) === celebrationPhrase) ? celebrationPhrase : '';
 }
 function clearCelebration() {
   clearTimeout(celebrationTimer);
   document.getElementById('celebration').replaceChildren();
 }
-function celebrateWinner() {
+function celebrateWinner(force = false) {
   clearCelebration();
-  if (!celebrationPhrase || items[lastWin] !== celebrationPhrase) return;
+  if (!force && (!celebrationPhrase || itemText(items[lastWin]) !== celebrationPhrase)) return;
   const layer = document.getElementById('celebration');
   const emojis = ['🎉', '🏆', '✨', '🎊', '🥳'];
   for (let i = 0; i < 28; i++) {
@@ -462,12 +568,15 @@ let CX, CY, R;
 function resizeCvs() {
   const kiosk = document.body.classList.contains('kiosk');
   const wside = document.querySelector('.wside');
-  const availW = Math.max(1, wside.clientWidth - 48);
+  const style = getComputedStyle(wside);
+  const availW = Math.max(1, wside.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight));
+  const availH = Math.max(1, wside.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom)
+    - document.getElementById('spinBtn').getBoundingClientRect().height - parseFloat(style.rowGap));
   const scale = kiosk
-    ? Math.min(availW / 480, Math.max(1, window.innerHeight - 250) / 460, 3)
+    ? Math.min(availW / 480, availH / 460)
     : Math.min(availW / 480, 1.2);
-  const width = Math.round(480 * scale);
-  const height = Math.round(460 * scale);
+  const width = 480 * scale;
+  const height = 460 * scale;
   const dpr = window.devicePixelRatio || 1;
   cvs.width = Math.round(width * dpr);
   cvs.height = Math.round(height * dpr);
@@ -602,7 +711,7 @@ function draw() {
   /* Each label uses a rectangle that fits within its own segment. */
   for (let i = 0; i < n; i++) {
     const mid = angle + i * arc + arc / 2;
-    const layout = fitLabel(items[i], n, R);
+    const layout = fitLabel(itemText(items[i]), n, R);
     ctx.save();
     ctx.translate(CX, CY);
     ctx.rotate(mid);
@@ -694,12 +803,34 @@ function doSpin() {
 
 /* ── MODAL ───────────────────────────────────────── */
 function showWin() {
-  document.getElementById('mwin').textContent = items[lastWin];
+  const item = items[lastWin];
+  document.getElementById('mwin').textContent = itemText(item);
+  const choices = document.getElementById('answerChoices');
+  choices.replaceChildren();
+  document.getElementById('answerFeedback').textContent = '';
+  if (item.answers) item.answers.forEach((answer, index) => {
+    const button = document.createElement('button');
+    button.className = 'answer-choice';
+    button.textContent = answer;
+    button.dir = 'auto';
+    button.addEventListener('click', () => {
+      const correct = index === item.correctAnswer;
+      button.classList.add(correct ? 'correct' : 'wrong');
+      button.disabled = true;
+      document.getElementById('answerFeedback').textContent = correct ? 'إجابة صحيحة! 🎉' : 'إجابة غير صحيحة، حاول مرة أخرى';
+      playAnswerSound(correct);
+      if (correct) {
+        choices.querySelectorAll('button').forEach(choice => { choice.disabled = true; });
+        celebrateWinner(true);
+      }
+    });
+    choices.append(button);
+  });
   document.getElementById('ov').classList.add('on');
-  document.getElementById('contBtn').focus();
-  celebrateWinner();
+  (choices.firstElementChild || document.getElementById('contBtn')).focus();
+  if (!item.answers) celebrateWinner();
 }
-function closeOv() { clearCelebration(); document.getElementById('ov').classList.remove('on'); }
+function closeOv() { stopAnswerSounds(); clearCelebration(); document.getElementById('ov').classList.remove('on'); }
 function spinAgain() {
   closeOv();
   if (items.length >= 2) doSpin();
@@ -738,7 +869,7 @@ function refreshPresetSel() {
 function loadPreset(name) {
   if (spinning) return;
   if (!presets[name]) return;
-  items = presets[name].slice();
+  items = cloneItems(presets[name]);
   currentPreset = name;
   saveJSON('stw-current-preset', currentPreset);
   render(); draw();
@@ -748,7 +879,7 @@ function saveAsPreset() {
   if (!items.length) { alert('Add items to the wheel before saving a preset.'); return; }
   const name = prompt('Preset name:', currentPreset || '');
   if (!name) return;
-  presets[name] = items.slice();
+  presets[name] = cloneItems(items);
   currentPreset = name;
   saveJSON('stw-presets', presets);
   saveJSON('stw-current-preset', currentPreset);
@@ -776,12 +907,23 @@ function validatePhrases(value, label) {
   if (!Array.isArray(value) || !value.length)
     throw new Error(`${label} must be a non-empty array of phrases.`);
   return value.map((phrase, i) => {
-    if (typeof phrase !== 'string' || !phrase.trim())
-      throw new Error(`${label}: phrase ${i + 1} must be a non-empty string.`);
-    return phrase.trim();
+    if (typeof phrase === 'string' && phrase.trim()) return phrase.trim();
+    if (phrase && typeof phrase.text === 'string' && phrase.text.trim() &&
+        Array.isArray(phrase.answers) && phrase.answers.length >= 2 &&
+        phrase.answers.every(answer => typeof answer === 'string' && answer.trim()) &&
+        Number.isInteger(phrase.correctAnswer) && phrase.correctAnswer >= 0 && phrase.correctAnswer < phrase.answers.length) {
+      return { text: phrase.text.trim(), answers: phrase.answers.map(answer => answer.trim()), correctAnswer: phrase.correctAnswer };
+    }
+    throw new Error(`${label}: item ${i + 1} needs a phrase, or a question with at least two answers and a valid correctAnswer index.`);
   });
 }
 function parseImport(data) {
+  // Versioned exports keep metadata outside the named preset lists.
+  if (data && typeof data === 'object' && !Array.isArray(data) &&
+      Object.prototype.hasOwnProperty.call(data, 'version') &&
+      Object.prototype.hasOwnProperty.call(data, 'presets')) {
+    data = data.presets;
+  }
   if (Array.isArray(data)) return { phrases: validatePhrases(data, 'The file') };
   if (!data || typeof data !== 'object' || !Object.keys(data).length)
     throw new Error('Use an array of phrases or an object containing named presets.');
@@ -807,7 +949,7 @@ function importPresets(file) {
       document.getElementById('importSummary').textContent = `${file.name}: ${count} phrases` +
         (parsed.named ? ` across ${groups.length} presets.` : '.');
       document.getElementById('importPreview').textContent = groups.map(([name, phrases]) =>
-        `${name} (${phrases.length})\n${phrases.slice(0, 5).join('\n')}${phrases.length > 5 ? '\n…' : ''}`).join('\n\n');
+        `${name} (${phrases.length})\n${phrases.slice(0, 5).map(itemText).join('\n')}${phrases.length > 5 ? '\n…' : ''}`).join('\n\n');
       const conflicts = parsed.named ? Object.keys(parsed.named).filter(name => Object.prototype.hasOwnProperty.call(presets, name)) : [];
       document.getElementById('importNote').textContent = parsed.named
         ? (conflicts.length ? `Existing presets will be replaced: ${conflicts.join(', ')}. The current wheel stays as it is; select a preset after importing.`
@@ -850,6 +992,7 @@ function applyImport(append) {
 }
 function updateControls() {
   const locked = spinning || !!pendingImport;
+  document.getElementById('welcomeBack').disabled = locked;
   document.querySelectorAll('.pside button, .pside input, .pside textarea, .pside select').forEach(el => { el.disabled = locked; });
   document.getElementById('spinBtn').disabled = locked || items.length < 2;
 }
@@ -876,10 +1019,40 @@ function render() {
     <div class="irow">
       <div class="dot" style="background:${PAL[i % PAL.length]}"></div>
       <div class="inum">${i+1}</div>
-      <div class="itxt">${esc(t)}</div>
+      <div class="itxt"><span dir="auto">${esc(itemText(t))}</span>
+        <details class="answer-editor">
+          <summary>${t.answers ? 'Edit answers (' + t.answers.length + ')' : '+ Add answers'}</summary>
+          <form data-item="${i}">
+            <label>Answer choices (one per line)<textarea class="ta" name="answers" required placeholder="First answer&#10;Second answer">${esc(t.answers ? t.answers.join('\n') : '')}</textarea></label>
+            <label>Correct answer number<input class="field" name="correct" type="number" min="1" value="${t.answers ? t.correctAnswer + 1 : 1}" required></label>
+            <div class="hint">Enter at least two choices and the number of the correct answer, starting at 1.</div>
+            <div role="status" class="editor-status"></div>
+            <div class="row"><button class="abtn" type="submit">Save answers</button><button class="abtn remove-answers" type="button" data-item="${i}">Remove answers</button></div>
+          </form>
+        </details>
+      </div>
       <button class="xbtn" data-i="${i}" title="Remove">×</button>
     </div>`).join('');
   list.querySelectorAll('.xbtn').forEach(b => b.addEventListener('click', () => del(+b.dataset.i)));
+  list.querySelectorAll('.answer-editor form').forEach(form => form.addEventListener('submit', event => {
+    event.preventDefault();
+    if (spinning || pendingImport) return;
+    const answers = form.elements.answers.value.split('\n').map(answer => answer.trim()).filter(Boolean);
+    const correctAnswer = Number(form.elements.correct.value) - 1;
+    if (answers.length < 2 || !Number.isInteger(correctAnswer) || correctAnswer < 0 || correctAnswer >= answers.length) {
+      form.querySelector('.editor-status').textContent = 'Enter at least two answers and a correct answer number within the list.';
+      return;
+    }
+    const index = Number(form.dataset.item);
+    items[index] = { text: itemText(items[index]), answers, correctAnswer };
+    render();
+  }));
+  list.querySelectorAll('.remove-answers').forEach(button => button.addEventListener('click', () => {
+    if (spinning || pendingImport) return;
+    const index = Number(button.dataset.item);
+    items[index] = itemText(items[index]);
+    render();
+  }));
   updateControls();
 }
 
@@ -905,11 +1078,44 @@ function toggleTheme() {
 /* ── KIOSK MODE — for a screen on the street: wheel + spin button only ── */
 function setKiosk(on) {
   document.body.classList.toggle('kiosk', on);
+  refreshFullscreenEmojis();
+  closeOv();
+  setWelcome(on);
   if (on) document.documentElement.requestFullscreen?.().catch(() => {});
   else if (document.fullscreenElement) document.exitFullscreen?.();
   resizeCvs(); draw();
 }
 function toggleKiosk() { setKiosk(!document.body.classList.contains('kiosk')); }
+function refreshFullscreenEmojis() {
+  const fullscreen = document.body.classList.contains('kiosk');
+  const symbols = (emojiSettings.symbols.trim() || EMOJI_DEFAULTS.symbols).split(/\s+/u);
+  const count = emojiSettings.count;
+  for (const id of ['welcomeEmojis']) {
+    const layer = document.getElementById(id);
+    layer.replaceChildren();
+    if (!fullscreen || !emojiSettings.enabled) continue;
+    for (let i = 0; i < count; i++) {
+      const emoji = document.createElement('span');
+      emoji.className = 'fullscreen-emoji';
+      emoji.textContent = symbols[i % symbols.length];
+      emoji.style.setProperty('--left', `${2 + ((i + Math.random()) / count) * 92}%`);
+      const duration = emojiSettings.speed * (0.75 + Math.random() * 0.5);
+      emoji.style.setProperty('--size', `${emojiSettings.minSize + (emojiSettings.maxSize - emojiSettings.minSize) * (i % 7) / 6}px`);
+      emoji.style.setProperty('--duration', `${duration}s`);
+      emoji.style.setProperty('--delay', `${-((i * 0.61803398875) % 1) * duration}s`);
+      emoji.style.setProperty('--drift', `${emojiSettings.sway * (0.6 + Math.random() * 0.8)}px`);
+      layer.append(emoji);
+    }
+  }
+}
+function setWelcome(on) {
+  document.body.classList.toggle('welcoming', on);
+  document.querySelector('.welcome').inert = !on;
+  document.querySelector('.main').inert = on;
+  document.querySelector('.hdr').inert = on;
+  resizeCvs(); draw();
+  document.getElementById(on ? 'welcomeStart' : (document.body.classList.contains('kiosk') ? 'spinBtn' : 'kioskBtn')).focus();
+}
 
 /* ── EVENTS ──────────────────────────────────────── */
 document.getElementById('spinBtn') .addEventListener('click', doSpin);
@@ -918,6 +1124,11 @@ document.getElementById('sin')     .addEventListener('keydown', e => { if (e.key
 document.getElementById('addBulk') .addEventListener('click', addBulk);
 document.getElementById('clearAll').addEventListener('click', clearAll);
 document.getElementById('contBtn') .addEventListener('click', closeOv);
+document.getElementById('resultHomeBtn').addEventListener('click', () => {
+  closeOv();
+  if (document.body.classList.contains('kiosk')) setWelcome(true);
+  else setKiosk(true);
+});
 document.getElementById('spinAgainBtn').addEventListener('click', spinAgain);
 document.getElementById('tA')      .addEventListener('click', () => switchTab('A'));
 document.getElementById('tB')      .addEventListener('click', () => switchTab('B'));
@@ -931,6 +1142,14 @@ document.getElementById('celebrationPhrase').addEventListener('change', event =>
 document.getElementById('themeBtn').addEventListener('click', toggleTheme);
 document.getElementById('kioskBtn') .addEventListener('click', toggleKiosk);
 document.getElementById('displayExit').addEventListener('click', () => setKiosk(false));
+document.getElementById('welcomeStart').addEventListener('click', () => {
+  setWelcome(false);
+});
+document.getElementById('welcomeBack').addEventListener('click', () => {
+  if (spinning) return;
+  closeOv();
+  setWelcome(true);
+});
 document.getElementById('importCancel').addEventListener('click', closeImport);
 document.getElementById('importApply').addEventListener('click', () => applyImport(false));
 document.getElementById('importAppend').addEventListener('click', () => applyImport(true));
@@ -952,9 +1171,30 @@ document.getElementById('presetFile').addEventListener('change', e => { if (e.ta
 document.getElementById('ov')      .addEventListener('click', e => { if (e.target === e.currentTarget) closeOv(); });
 window.addEventListener('resize', () => { resizeCvs(); draw(); render(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('kiosk')) setKiosk(false); });
-document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) document.body.classList.remove('kiosk'); resizeCvs(); draw(); });
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) {
+    document.body.classList.remove('kiosk');
+    refreshFullscreenEmojis();
+    setWelcome(false);
+  }
+  resizeCvs(); draw();
+});
+
+for (const [suffix, key] of [['Count','count'],['MinSize','minSize'],['MaxSize','maxSize'],['Speed','speed'],['Sway','sway']]) {
+  document.getElementById('emoji' + suffix).addEventListener('input', e => {
+    emojiSettings[key] = Number(e.target.value);
+    if (key === 'minSize') emojiSettings.maxSize = Math.max(emojiSettings.minSize, emojiSettings.maxSize);
+    if (key === 'maxSize') emojiSettings.minSize = Math.min(emojiSettings.minSize, emojiSettings.maxSize);
+    saveEmojiSettings();
+  });
+}
+document.getElementById('emojiEnabled').addEventListener('change', e => { emojiSettings.enabled = e.target.checked; saveEmojiSettings(); });
+document.getElementById('emojiSymbols').addEventListener('change', e => { emojiSettings.symbols = e.target.value; saveEmojiSettings(); });
+document.getElementById('emojiReset').addEventListener('click', () => { emojiSettings = { ...EMOJI_DEFAULTS }; saveEmojiSettings(); });
+document.getElementById('emojiPreview').addEventListener('click', () => setKiosk(true));
 
 /* ── INIT ────────────────────────────────────────── */
+syncEmojiControls();
 document.getElementById('spinDuration').value = spinDuration;
 document.getElementById('durationValue').textContent = `${spinDuration} seconds`;
 resizeCvs();
